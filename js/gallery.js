@@ -65,6 +65,7 @@ const images = [
 ];
 
 const gallery = document.querySelector('.gallery');
+
 const galleryElement = images
   .map(
     ({ preview, original, description }) => `<li class="gallery-item">
@@ -82,11 +83,21 @@ const galleryElement = images
   .join('');
 
 gallery.insertAdjacentHTML('beforeend', galleryElement);
+gallery.addEventListener('click', handleClick);
 
-const galleryLinks = gallery.querySelectorAll('.gallery-link');
+function handleClick(event) {
+  event.preventDefault();
 
-galleryLinks.forEach(link => {
-  link.addEventListener('click', event => {
-    event.preventDefault();
-  });
-});
+  const target = event.target;
+
+  if (target.classList.contains('gallery-image')) {
+    const imageLargeURL = target.dataset.source;
+
+    const instance = basicLightbox.create(`
+      <div class="modal">
+        <img src="${imageLargeURL}" alt="${imageLargeURL.description}" width="1112" height="640"/>
+      </div>
+    `);
+    instance.show();
+  }
+}
